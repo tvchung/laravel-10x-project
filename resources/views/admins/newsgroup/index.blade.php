@@ -185,13 +185,23 @@
                         <td>
                             <img src="${data.ICON}" alt="${data.NAME}" style="width:3rem"> 
                         </td>
-                        <td></td>
+                        <td>${data->UPDATED_BY}</td>
                         <td>${data->updated_at}</td>
                         <td>
-                           
+                            ${data->ISACTIVE=='1'?'Hiện':'Ẩn'}
                         </td>
                         <td class="action">
-                           
+                           <div class="d-flex justify-content-between align-items-center mx-3">   
+                                <a href="#" title="Xem chi tiết">
+                                    <i class="fa-regular fa-eye"></i>
+                                </a>
+                                <a href="#" title="Sửa thông tin">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </a>
+                                <a href="#" title="Xóa danh mục">
+                                    <i class="fa-sharp fa-regular fa-trash-can"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
             `;
