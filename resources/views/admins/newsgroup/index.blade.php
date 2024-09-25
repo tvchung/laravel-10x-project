@@ -52,6 +52,7 @@
       <div class="modal-content">
         <form id="frmAddOrEdit" method="post" enctype="multipart/form-data" action="{{route('newsgroup.createSubmit')}}">
             @csrf
+            <input type="hidden" name="id" value="0">
             <div class="modal-header">
             <h5 class="modal-title" id="newsgroupModalLabel">Thêm mới nhóm tin tức</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -62,25 +63,19 @@
                     <input type="text" class="form-control" id="NAME" name="NAME" 
                                 aria-label="NAME" aria-describedby="NAME"
                                     onkeyup="fn_ChangeTitleToSlug(this.value)">
-                        @error('NAME')
-                            <span class="text-danger">{{$message}}</span>
-                        @enderror
+                    <span class="text-danger">(*)</span>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Slug</span>
                     <input type="text" class="form-control" id="SLUG" name="SLUG" 
                                 aria-label="SLUG" aria-describedby="SLUG" readonly/>
-                        @error('SLUG')
-                            <span class="text-danger">{{$message}}</span>
-                        @enderror
+                            <span class="text-danger"></span>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Icon</span>
-                    <input type="file" class="form-control" id="ICON" name="ICON" 
-                                aria-label="ICON" aria-describedby="ICON"/>
-                        @error('ICON')
-                            <span class="text-danger">{{$message}}</span>
-                        @enderror
+                    <input type="file" class="form-control" id="fileICON" name="fileICON" 
+                                aria-label="fileICON" aria-describedby="fileICON"/>
+                            <span class="text-danger"></span>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">IdParent</span>
@@ -88,54 +83,50 @@
                         aria-label="IDPARENT" aria-describedby="IDPARENT">
                         <option value="null">---Choose---</option>
                     </select>
-                    @error('IDPARENT')
-                            <span class="text-danger">{{$message}}</span>
-                    @enderror
+                            <span class="text-danger"></span>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" >Meta title</span>
                     <input type="text" class="form-control" id="META_TITLE" name="META_TITLE" 
                                 aria-label="META_TITLE" aria-describedby="META_TITLE"/>
-                        @error('META_TITLE')
-                            <span class="text-danger">{{$message}}</span>
-                        @enderror
+                            <span class="text-danger"></span>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" >Meta <br/>keyword</span>
                     <textarea name="META_KEYWORD" id="META_KEYWORD"  rows="2" class="form-control"></textarea>
-                    @error('META_KEYWORD')
-                        <span class="text-danger">{{$message}}</span>
-                    @enderror
+                        <span class="text-danger"></span>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" >Meta <br/>Description</span>
                     <textarea name="META_DESCRIPTION" id="META_DESCRIPTION"  rows="3" class="form-control"></textarea>
-                    @error('META_KEYWORD')
-                        <span class="text-danger">{{$message}}</span>
-                    @enderror
+                        <span class="text-danger"></span>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Active</span>
                     <div class="d-flex align-items-center mx-3 ">
                         <div class="form-check mx-1"> 
-                            <input class="form-check-input" type="radio" name="ISACTIVE" id="gridISACTIVE1" value="1" checked> 
-                            <label class="form-check-label" for="gridISACTIVE1">
+                            <input class="form-check-input" type="radio" name="ISACTIVE" id="rdISACTIVE1" value="1" > 
+                            <label class="form-check-label" for="rdISACTIVE1">
                                 Active
                             </label> 
                         </div>
                         <div class="form-check mx-1"> 
-                            <input class="form-check-input" type="radio" name="ISACTIVE" id="gridISACTIVE2" value="0"> 
-                            <label class="form-check-label" for="gridISACTIVE2">
+                            <input class="form-check-input" type="radio" name="ISACTIVE" id="rdISACTIVE2" value="0"> 
+                            <label class="form-check-label" for="rdISACTIVE2">
                                 Hide
                             </label> 
                         </div>
                     </div>
                 </div>
-                
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 <button type="submit" class="btn btn-primary" id="btnSumit">Ghi lại</button>
+            </div>
+            <div hidden>
+                <input type="hidden" name="updated_at"  id="updated_at" value="">
+                <input type="hidden" name="UPDATED_BY"   id="UPDATED_BY" value="">
+                <input type="hidden" name="ICON"  id="ICON">
             </div>
         </form>
       </div>
@@ -156,6 +147,7 @@
             e.preventDefault();
             var form_data = new FormData($('#frmAddOrEdit')[0]); // this method will send the file request and the post data 
             form_data.append("_token","{{csrf_token()}}") //for csrf token
+
             $.ajax({
                 data: form_data,
                 url: "{{ route('newsgroup.createSubmit') }}",
@@ -166,7 +158,6 @@
                 success: function (data) {
                     console.log("data",data);
                     fillAddToList(data);
-                    // $('#newsgroupModal').hide();
                     $("button[type='submit']").attr('data-bs-dismiss','modal');
                 },
                 error: function (data) {
@@ -177,35 +168,62 @@
         });
         const fillAddToList = (data)=>{
             let row = `
-                <tr class="align-middle">
+                    <tr class="align-middle">
                         <td   class="text-center">${data.id}</td>
                         <td   class="text-center">${data.id}</td>
                         <td>${data.NAME}</td>
                         <td>${data.SLUG}</td>
                         <td>
-                            <img src="${data.ICON}" alt="${data.NAME}" style="width:3rem"> 
+                            <img src="${data.ICON}" alt="${data.NAME}" style="width:3rem" class="rounded-circle"> 
                         </td>
-                        <td>${data->UPDATED_BY}</td>
-                        <td>${data->updated_at}</td>
-                        <td>
-                            ${data->ISACTIVE=='1'?'Hiện':'Ẩn'}
+                        <td>${data.UPDATED_BY} : {{Auth::guard('admin')->user()->name}}</td>
+                        <td>${data.updated_at}</td>
+                        <td class="text-center">
+                            ${data.ISACTIVE=='1'?'<span class="badge rounded-pill bg-success">Hiện</span>':'<span class="badge rounded-pill bg-warning text-dark">Ẩn</span>'}
                         </td>
                         <td class="action">
                            <div class="d-flex justify-content-between align-items-center mx-3">   
-                                <a href="#" title="Xem chi tiết">
+                                <a href="javascript:void(0)" title="Xem chi tiết">
                                     <i class="fa-regular fa-eye"></i>
                                 </a>
-                                <a href="#" title="Sửa thông tin">
+                                <a href="javascript:void(0)" title="Sửa thông tin"  onclick="fn_Edit(${data.id})" >
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </a>
-                                <a href="#" title="Xóa danh mục">
+                                <a href="javascript:void(0)" title="Xóa danh mục">
                                     <i class="fa-sharp fa-regular fa-trash-can"></i>
                                 </a>
                             </div>
                         </td>
                     </tr>
-            `;
+                `;
             $('#tblNewsGroup tbody ').append(row);
+        }
+    </script>
+    <script>
+        function fn_Edit(id){
+            $.get('news-group/edit/'+id,function(data){
+                console.log(data);
+                
+                $('#id').val(data.id);
+                $('#NAME').val(data.NAME);
+                $('#SLUG').val(data.SLUG);
+                $('#IDPARENT').val(data.IDPARENT);
+                $('#META_TITLE').val(data.META_TITLE);
+                $('#META_KEYWORD').val(data.META_KEYWORD);
+                $('#META_DESCRIPTION').val(data.META_DESCRIPTION);
+                $('#ICON').val(data.ICON);
+                $('#updated_at').val(data.updated_at);
+                $('#UPDATED_BY').val(data.UPDATED_BY);
+                $('#ISACTIVE').val(data.ISACTIVE);
+                if(data.ISACTIVE == "1"){
+                    $('#rdISACTIVE1').prop('checked',true);
+                    $('#rdISACTIVE2').prop('checked',false);
+                }else{
+                    $('#rdISACTIVE1').prop('checked',false);
+                    $('#rdISACTIVE2').prop('checked',true);
+                }
+                $('#newsgroupModal').modal('toggle');
+            })
         }
     </script>
 @endsection 

@@ -5,7 +5,7 @@
         <!--begin::Brand Link--> 
         <a href="/admins" class="brand-link"> 
             <!--begin::Brand Image--> 
-            <img src="/assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> 
+            <img src="https://devmaster.edu.vn/images/logo.png" alt="Devmaster Logo" class="brand-image opacity-75 shadow"> 
             <!--end::Brand Image--> 
             <!--begin::Brand Text--> 
             <span class="brand-text fw-light text-danger">{{Auth::guard('admin')->user()->name}}</span> 
@@ -39,7 +39,7 @@
                     <a href="{{route('category.index')}}" class="nav-link"> 
                         <i class="nav-icon bi bi-table"></i>
                         <p>
-                            Quản lý loại sản phẩm
+                            Nhóm sản phẩm
                         </p>
                     </a>
                 </li>

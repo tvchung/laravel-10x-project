@@ -30,20 +30,26 @@
                         <td style="width:3rem" class="text-center">{{$item->id}}</td>
                         <td>{{$item->NAME}}</td>
                         <td>{{$item->SLUG}}</td>
-                        <td>
-                            <img src="{{$item->ICON}}" alt="{{$item->NAME}}" style="width:3rem"> 
+                        <td class="text-center">
+                            <img src="{{$item->ICON}}" alt="{{$item->NAME}}" style="width:3rem" class="rounded-circle"> 
                         </td>
                         <td>{{$item->UPDATED_BY}}:{{$item->name}}</td>
                         <td>{{$item->updated_at}}</td>
-                        <td>
-                            {{$item->ISACTIVE==1?'Hiện':'Ẩn'}}
+                        <td class="text-center">
+                            @if ($item->ISACTIVE==1)
+                            <span class="badge rounded-pill bg-success">Hiện</span>
+                            @endif
+                            @if ($item->ISACTIVE!=1)
+                            <span class="badge rounded-pill bg-warning text-dark">Ẩn</span>
+                            @endif
                         </td>
                         <td class="action">
                             <div class="d-flex justify-content-between align-items-center mx-3">   
                                 <a href="{{route('newsgroup.detail',[$item->id])}}" title="Xem chi tiết">
                                     <i class="fa-regular fa-eye"></i>
                                 </a>
-                                <a href="{{route('newsgroup.edit',[$item->id])}}" title="Sửa thông tin">
+                                <a href="javascript:void(0)" onclick="fn_Edit({{$item->id}})" 
+                                    title="Sửa thông tin">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </a>
                                 <a href="{{route('newsgroup.detail',[$item->id])}}" title="Xóa danh mục">

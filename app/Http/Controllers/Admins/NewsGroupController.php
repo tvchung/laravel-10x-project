@@ -28,11 +28,17 @@ class NewsGroupController extends Controller
     {
         // $data = newsgroup::where('id',$id);
         $data = Newsgroup::find($id);
-        return view('admins.newsgroup.detail',['data'=>$data,'id'=>$id]);
+        $list=DB::table('newsgroup')->where('id',$id)
+                    ->join('admins', 'admins.id', '=', 'newsgroup.updated_by')
+                    ->select('newsgroup.*', 'admins.name')
+                    ->get();
+        // return view('admins.newsgroup.detail',['data'=>$list,'id'=>$id]);
+        return response()->json($list);
     }
     // Get: create
     public function create()
     {
+
         return view('admins.newsgroup.create');
     }
     // Post: createSubmit
@@ -71,8 +77,8 @@ class NewsGroupController extends Controller
         $image_path = 'images\\newsgroup\\';
         $imageFileName="";
         $icon="";
-        if($request->hasFile('ICON')){
-            $image_tmp = $request->file('ICON');
+        if($request->hasFile('fileICON')){
+            $image_tmp = $request->file('fileICON');
             if($image_tmp->isValid()){
                 // get image extension
                 $extension = $image_tmp->getClientOriginalExtension();
@@ -81,12 +87,15 @@ class NewsGroupController extends Controller
                 $imageFileName = $request->NAME .'-' . $image_id_image .'.' .$extension; // tên file sẽ lưu trên server
                 $image_tmp->move($image_path,$imageFileName);
                 $icon='/images/newsgroup/'.$imageFileName;
-            }else if(!empty($request->ICON)){
-                $imageFileName = $request->ICON;
+            }else if(!empty($request->fileICON)){
+                $imageFileName = $request->fileICON;
                 $icon='/images/newsgroup/'.$imageFileName;
             }else{
                 $imageFileName = "";
             }
+        }
+        if(!empty($request->ICON)){
+            $icon = $request->ICON;
         }
         // tạo đối tượng thêm mới
         $newsgroup = new Newsgroup;
@@ -116,7 +125,8 @@ class NewsGroupController extends Controller
     public function edit($id)
     {
         $data = Newsgroup::find($id);
-        return view('admins.newsgroup.edit',['data'=>$data,'id'=>$id]);
+        return response()->json($data);
+        // return view('admins.newsgroup.edit',['data'=>$data,'id'=>$id]);
     }
     //POST:editSubmit
     public function editSubmit(Request $request)
