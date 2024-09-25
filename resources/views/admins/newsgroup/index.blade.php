@@ -201,6 +201,7 @@
     </script>
     <script>
         function fn_Edit(id){
+            $('#btnSumit').css('display','block');
             $.get('news-group/edit/'+id,function(data){
                 console.log(data);
                 
@@ -222,6 +223,35 @@
                     $('#rdISACTIVE1').prop('checked',false);
                     $('#rdISACTIVE2').prop('checked',true);
                 }
+                $('#newsgroupModal').modal('toggle');
+            })
+        }
+    </script>
+    <script>
+        function fn_Detail (id){
+            console.log("ID:", id);
+            $.get('news-group/detail/'+id,function(data){
+                console.log(data);
+                
+                $('#id').val(data.id);
+                $('#NAME').val(data.NAME);
+                $('#SLUG').val(data.SLUG);
+                $('#IDPARENT').val(data.IDPARENT);
+                $('#META_TITLE').val(data.META_TITLE);
+                $('#META_KEYWORD').val(data.META_KEYWORD);
+                $('#META_DESCRIPTION').val(data.META_DESCRIPTION);
+                $('#ICON').val(data.ICON);
+                $('#updated_at').val(data.updated_at);
+                $('#UPDATED_BY').val(data.UPDATED_BY);
+                $('#ISACTIVE').val(data.ISACTIVE);
+                if(data.ISACTIVE == "1"){
+                    $('#rdISACTIVE1').prop('checked',true);
+                    $('#rdISACTIVE2').prop('checked',false);
+                }else{
+                    $('#rdISACTIVE1').prop('checked',false);
+                    $('#rdISACTIVE2').prop('checked',true);
+                }
+                $('#btnSumit').css('display','none');
                 $('#newsgroupModal').modal('toggle');
             })
         }

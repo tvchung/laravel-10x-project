@@ -45,14 +45,16 @@
                         </td>
                         <td class="action">
                             <div class="d-flex justify-content-between align-items-center mx-3">   
-                                <a href="{{route('newsgroup.detail',[$item->id])}}" title="Xem chi tiết">
+                                <a href="javascript:void(0)" onclick="fn_Detail({{$item->id}})" 
+                                    title="Xem chi tiết">
                                     <i class="fa-regular fa-eye"></i>
                                 </a>
                                 <a href="javascript:void(0)" onclick="fn_Edit({{$item->id}})" 
                                     title="Sửa thông tin">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </a>
-                                <a href="{{route('newsgroup.detail',[$item->id])}}" title="Xóa danh mục">
+                                <a href="javascript:void(0)" onclick="" 
+                                    title="Xóa danh mục">
                                     <i class="fa-sharp fa-regular fa-trash-can"></i>
                                 </a>
                             </div>

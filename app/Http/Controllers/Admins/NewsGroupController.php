@@ -27,12 +27,13 @@ class NewsGroupController extends Controller
     public function detail($id)
     {
         // $data = newsgroup::where('id',$id);
-        $data = Newsgroup::find($id);
-        $list=DB::table('newsgroup')->where('id',$id)
+        // $data = Newsgroup::find($id);
+        $list=DB::table('newsgroup')
                     ->join('admins', 'admins.id', '=', 'newsgroup.updated_by')
+                    ->where('newsgroup.id',$id)
                     ->select('newsgroup.*', 'admins.name')
-                    ->get();
-        // return view('admins.newsgroup.detail',['data'=>$list,'id'=>$id]);
+                    ->get()->first();
+       
         return response()->json($list);
     }
     // Get: create
